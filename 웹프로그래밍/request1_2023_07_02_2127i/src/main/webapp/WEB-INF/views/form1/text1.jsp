@@ -5,13 +5,45 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width; initial-scale=1">
     <style>
-
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        div.container {
+            width: 300px;
+            margin: 20px auto;
+        }
+        form div {
+            margin-bottom: 10px;
+        }
+        input {
+            width: 200px;
+            padding: 4px;
+        }
+        button {
+            padding: 0.4em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <form>
+    <form method="post">
+        <h1>텍스트 입력폼 01</h1>
 
+        <div>
+            <label>text1:</label>
+            <input type="text" name="param1" value="아무 것이나 입력하시오1">
+        </div>
+
+        <div>
+            <label>text2:</label>
+            <input type="text" name="param2" value="아무 것이나 입력하시오2">
+        </div>
+
+        <button type="submit">확인</button>
+        <button type="reset">취소</button>
     </form>
 </div>
 </body>
