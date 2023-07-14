@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학과 목록</title>
+    <style>
+        div.container {
+            width: 900px;
+            margin: 50px auto;
+        }
+
+        thead th {
+            background-color: #eee;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            padding: 4px;
+            border: 1px solid lightgray;
+        }
+
+        td:nth-child(4) {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>학과 목록</h1>
+    <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>학과 번호</th>
+            <th>학과명</th>
+            <th>확과명 줄임</th>
+            <th>전화</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department: ${departments}">
+            <td th:text="${department.id}"></td>
+            <td th:text="${department.name}"></td>
+            <td th:text="${department.shortName}"></td>
+            <td th:text="${department.phone}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
