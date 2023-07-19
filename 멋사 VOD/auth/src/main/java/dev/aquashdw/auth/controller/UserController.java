@@ -48,8 +48,7 @@ public class UserController {
         if (!password.equals(passwordCheck)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        UserEntity newUser = new UserEntity();
-        newUser.setUsername(username);
+        UserEntity newUser = new UserEntity(username);
         newUser.setPassword(passwordEncoder.encode(password));
         userRepository.save(newUser);
         return "redirect:/home";

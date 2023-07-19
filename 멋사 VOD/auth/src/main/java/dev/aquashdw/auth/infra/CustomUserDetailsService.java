@@ -23,8 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(@Autowired UserRepository userRepository, @Autowired PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        final UserEntity testUserEntity = new UserEntity();
-        testUserEntity.setUsername("entity_user");
+        final UserEntity testUserEntity = new UserEntity("entity_user");
         testUserEntity.setPassword(passwordEncoder.encode("test1pass"));
         this.userRepository.save(testUserEntity);
     }

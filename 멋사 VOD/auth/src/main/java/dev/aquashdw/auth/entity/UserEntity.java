@@ -1,5 +1,7 @@
 package dev.aquashdw.auth.entity;
 
+import lombok.Builder;
+
 import javax.persistence.*;
 @Entity
 @Table(name = "USER_ENTITY")
@@ -19,6 +21,9 @@ public class UserEntity {
 
     @Column
     private String role;
+
+    public UserEntity() {
+    }
 
     public Long getId() {
         return id;
@@ -58,5 +63,10 @@ public class UserEntity {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Builder
+    public UserEntity(String username) {
+        this.username = username;
     }
 }

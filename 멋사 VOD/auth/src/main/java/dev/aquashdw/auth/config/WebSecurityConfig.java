@@ -1,6 +1,7 @@
 package dev.aquashdw.auth.config;
 
 import dev.aquashdw.auth.infra.CustomUserDetailsService;
+import dev.aquashdw.auth.infra.NaverOAuth2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
-    public WebSecurityConfig(@Autowired CustomUserDetailsService customUserDetailsService) {
+    private final NaverOAuth2Service naverOAuth2Service;
+    public WebSecurityConfig(
+            @Autowired CustomUserDetailsService customUserDetailsService,
+            @Autowired NaverOAuth2Service naverOAuth2Service
+            ) {
+        this.naverOAuth2Service = naverOAuth2Service;
         userDetailsService = customUserDetailsService;
     }
 
@@ -42,6 +48,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/user/login")
                     .defaultSuccessUrl("/home")
                     .permitAll()
+                .and()
+                    .oauth2Login()
+                    .userInfoEndpoint()
+                    .userService(this.naverOAuth2Service)
+                    .and()
+                    .defaultSuccessUrl("/home")
                 .and()
                     .logout()
                     .logoutUrl("/user/logout")
