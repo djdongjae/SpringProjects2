@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.thymeleaf.org" xmlns:my="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/common.css">
+    <script th:src="@{http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"></script>
+    <script src="../../static/common.js"></script>
+    <style>
+        a.btn {
+            float: right;
+            margin: -20px 0 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>학생 목록</h1>
+        <a th:href="@{/create(__${pagination.queryString}__)}" class="btn">학생등록</a>
+        <table class="list">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>학번</th>
+                    <th>이름</th>
+                    <th>학과</th>
+                    <th>성별</th>
+                    <th>전화</th>
+                    <th>이메일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student : ${students}"
+                    th:data-url="@{/edit(id=${student.id}, __${pagination.queryString}__)}">
+                    <td th:text="${student.id}"></td>
+                    <td th:text="${student.studentNo}"></td>
+                    <td th:text="${student.name}"></td>
+                    <td th:text="${student.department.name}"></td>
+                    <td th:text="${student.sex}"></td>
+                    <td th:text="${student.phone}"></td>
+                    <td th:text="${student.email}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:with="recordCount=${recordCount}, pageSize=${pageSize}, queryStringName=${queryStringName}">
+            <div
+                th:with="currentPage=${#strings.isEmpty(#request.getParameter(queryStringName)) ? 1 : #strings.parseInt(#request.getParameter(queryStringName))},
+                pageCount=${(recordCount + pageSize - 1) / pageSize},
+                base=${(currentPage - 1) / 10 * 10},
+                queryString=${#request.getParameter(queryStringName) == null ? queryStringName + '=@@@' :
+                             #strings.replace(#request.getQueryString(), '(\\?' + queryStringName + '=)[0-9]+', '?$1@@@')}">
+
+                <table class="pagination">
+                    <tr>
+                        <td th:if="${base > 0}">
+                            <a th:href="@{${url}((${base} - 1), ${queryString})}">&lt;</a>
+                        </td>
+                        <td th:each="i : ${#numbers.sequence(base + 1, base + 10)}" th:unless="${i > pageCount}">
+                        <td th:classappend="${i == currentPage ? 'active' : ''}">
+                            <a th:href="@{${url}(i, ${queryString})}" th:text="${i}">${i}</a>
+                        </td>
+                        </td>
+                        <td th:if="${base + 11 <= pageCount}">
+                            <a th:href="@{${url}((${base} + 11), ${queryString})}">&gt;</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            Ï
+        </div>
+    </div>
+</body>
+
+</html>
