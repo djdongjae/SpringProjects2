@@ -20,4 +20,11 @@ public interface StudentMapper {
             where s.name like #{name}
             """)
     List<Student> findByName(String name);
+
+    @Select("""
+            select s.*, d.name departmentName
+            from student s left join department d on s.departmentId = d.id
+            where s.id = #{id}
+            """)
+    Student findById(int id);
 }

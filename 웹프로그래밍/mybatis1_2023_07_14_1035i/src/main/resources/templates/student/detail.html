@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Detail</title>
+    <style>
+        div.container {
+            width: 600px;
+            margin: 50px auto;
+        }
+
+        body {
+            font-family: 굴림체;
+        }
+
+        table {
+            width: 500px;
+            border-collapse: collapse;
+        }
+
+        table td:nth-child(1) {
+            background-color: #eee;
+        }
+
+        td {
+            padding: 5px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>학생</h1>
+
+        <table>
+            <tr>
+                <td>ID</td>
+                <td th:text="${student.id}"></td>
+            </tr>
+            <tr>
+                <td>학번</td>
+                <td th:text="${student.studentNo}"></td>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td th:text="${student.name}"></td>
+            </tr>
+            <tr>
+                <td>학과ID</td>
+                <td th:text="${student.departmentId}"></td>
+            </tr>
+            <tr>
+                <td>학과명</td>
+                <td th:text="${student.departmentName}"></td>
+            </tr>
+            <tr>
+                <td>전화</td>
+                <td th:text="${student.phone}"></td>
+            </tr>
+            <tr>
+                <td>성별</td>
+                <td th:text="${student.sex}"></td>
+            </tr>
+            <tr>
+                <td>이메일</td>
+                <td th:text="${student.email}"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

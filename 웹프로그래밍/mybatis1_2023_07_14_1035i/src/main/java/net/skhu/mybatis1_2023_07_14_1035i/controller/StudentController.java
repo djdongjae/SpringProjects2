@@ -34,4 +34,11 @@ public class StudentController {
         model.addAttribute("srchText", srchText);
         return "student/list1";
     }
+
+    @RequestMapping("student/detail")
+    public String detail(Model model, Integer id) {
+        if (id == null) id = 5;
+        model.addAttribute("student", studentMapper.findById(id));
+        return "student/detail";
+    }
 }
