@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Detail</title>
+    <style>
+        div.container {
+            width: 600px;
+            margin: 50px auto;
+        }
+
+        body {
+            font-family: 굴림체;
+        }
+
+        table {
+            width: 500px;
+            border-collapse: collapse;
+        }
+
+        table td:nth-child(1) {
+            background-color: #eee;
+        }
+
+        td {
+            padding: 5px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>도서</h1>
+
+    <table>
+        <tr>
+            <td>ID</td>
+            <td th:text="${book.id}"></td>
+        </tr>
+        <tr>
+            <td>제목</td>
+            <td th:text="${book.title}"></td>
+        </tr>
+        <tr>
+            <td>저자</td>
+            <td th:text="${book.author}"></td>
+        </tr>
+        <tr>
+            <td>카테고리 ID</td>
+            <td th:text="${book.categoryId}"></td>
+        </tr>
+        <tr>
+            <td>카테고리</td>
+            <td th:text="${book.categoryName}"></td>
+        </tr>
+        <tr>
+            <td>가격</td>
+            <td th:text="${book.price}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+
+</html>
