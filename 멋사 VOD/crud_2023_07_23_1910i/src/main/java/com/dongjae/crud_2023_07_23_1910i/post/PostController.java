@@ -30,4 +30,27 @@ public class PostController {
         logger.info("in read all");
         return this.postList;
     }
+
+    @GetMapping("read-one")
+    public PostDto readPostOne(@RequestParam("id") int id) {
+        logger.info("in read one");
+        return this.postList.get(id);
+    }
+
+    @PostMapping("update")
+    public void updatePost(@RequestParam("id") int id, @RequestBody PostDto postDto) {
+        PostDto targetPost = this.postList.get(id);
+        if (postDto.getTitle() != null) {
+            targetPost.setTitle(postDto.getTitle());
+        }
+        if (postDto.getContent() != null) {
+            targetPost.setContent(postDto.getContent());
+        }
+        this.postList.set(id, targetPost);
+    }
+
+    @DeleteMapping("delete")
+    public void deletePost(@RequestParam("id") int id) {
+        this.postList.remove(id);
+    }
 }

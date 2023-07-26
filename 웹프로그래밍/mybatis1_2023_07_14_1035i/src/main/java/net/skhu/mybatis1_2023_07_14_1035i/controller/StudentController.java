@@ -54,4 +54,12 @@ public class StudentController {
         model.addAttribute("srchText", srchText);
         return "student/list2";
     }
+
+    @RequestMapping("student/list3")
+    public String list3(Model model, String srchText) {
+        if (srchText == null) srchText = "";
+        model.addAttribute("students", studentMapper.findByName(srchText + "%"));
+        model.addAttribute("srchText", srchText);
+        return "student/list3";
+    }
 }

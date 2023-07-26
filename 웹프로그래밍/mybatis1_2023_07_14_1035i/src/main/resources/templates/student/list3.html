@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        div.container {
+            width: 900px;
+            margin: 50px auto;
+        }
+        thead th {
+            background-color: #eee;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td, th {
+            padding: 4px;
+            border: 1px solid lightgray;
+        }
+        td:nth-child(4) {
+            text-align: center;
+        }
+        input {
+            padding: 5px;
+            font-size: 10pt;
+        }
+        button {
+            margin: 10px;
+            padding: 0.4em 2em;
+        }
+        tr[href]:hover {
+            background-color: #ffb;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>학생목록</h1>
+        <form>
+            <label>이름</label>
+            <input type="text" name="srchText" th:value="${srchText}" placeholder="검색조건">
+            <button type="submit">조회</button>
+        </form>
+
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>학번</th>
+                    <th>이름</th>
+                    <th>학과</th>
+                    <th>전화</th>
+                    <th>성별</th>
+                    <th>이메일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student: ${students}" th:href="@{detail(id=${student.id})}">
+                    <td th:text="${student.studentNo}"></td>
+                    <td th:text="${student.name}"></td>
+                    <td th:text="${student.departmentName}"></td>
+                    <td th:text="${student.phone}"></td>
+                    <td th:text="${student.sex}"></td>
+                    <td th:text="${student.email}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $("href").click(function() {
+            var url = $(this).attr("href");
+            location.href = url;
+        })
+    </script>
+</body>
+</html>
