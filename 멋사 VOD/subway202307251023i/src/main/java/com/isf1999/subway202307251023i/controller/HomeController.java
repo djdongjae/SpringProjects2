@@ -1,6 +1,8 @@
 package com.isf1999.subway202307251023i.controller;
 
+import com.isf1999.subway202307251023i.entity.LectureInfo;
 import com.isf1999.subway202307251023i.entity.SubstationInfo;
+import com.isf1999.subway202307251023i.repository.LectureInfoRepository;
 import com.isf1999.subway202307251023i.repository.SubstationInfoRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -8,20 +10,17 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 
 @Controller
 public class HomeController {
-    @Autowired
-    private SubstationInfoRepository substationInfoRepository;
+    @Autowired private SubstationInfoRepository substationInfoRepository;
+
+    @Autowired private LectureInfoRepository lectureInfoRepository;
 
     @GetMapping("/api")
     public String index() {
@@ -69,6 +68,51 @@ public class HomeController {
         }
 
         return substationInfoRepository.findAll();
+
+    }
+
+    @GetMapping("list")
+    public String lecture(Model model) {
+        model.addAttribute("lectures", lectureInfoRepository.findAll());
+        return "list";
+    }
+
+    @PostMapping("list")
+    public String lecture(Model model, String srchText) {
+        if (srchText == null) srchText = "";
+        model.addAttribute("lectures", lectureInfoRepository.findByNameLike("%" + srchText + "%"));
+        return "list";
+    }
+
+    @RequestMapping("load_save")
+    public String load_save() throws Exception {
+        JSONParser parser = new JSONParser();
+        Reader reader = new FileReader("/Users/dongjae/Desktop/SpringProjects2/멋사 VOD/subway202307251023i/src/main/resources/static/lecture.json");
+        JSONObject jsonObject = (JSONObject) parser.parse(reader);
+        JSONArray records = (JSONArray) jsonObject.get("records");
+
+        for (int i = 0; i < records.size(); i++) {
+            JSONObject tmp = (JSONObject) records.get(i);
+            LectureInfo lectureInfo = new LectureInfo(
+                    i + (long)1,
+                    (String) tmp.get("강좌명"),
+                    (String) tmp.get("강사명"),
+                    (String) tmp.get("교육시작일자"),
+                    (String) tmp.get("교육종료일자"),
+                    (String) tmp.get("강좌내용"),
+                    (String) tmp.get("교육대상구분"),
+                    (String) tmp.get("교육방법구분"),
+                    (String) tmp.get("운영요일"),
+                    (String) tmp.get("교육장소"),
+                    (String) tmp.get("강좌정원수"),
+                    (String) tmp.get("수강료"),
+                    (String) tmp.get("교육장도로명주소"),
+                    (String) tmp.get("운영기관명")
+            );
+            lectureInfoRepository.save(lectureInfo);
+        }
+
+        return "success";
 
     }
 }
