@@ -12,10 +12,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/home/**")
+                .antMatchers("/home/**", "/user/**")
                 .anonymous()
                 .anyRequest()
                 .authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/home")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/user/logout")
+                .logoutSuccessUrl("/home")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+                .permitAll()
         ;
     }
 }

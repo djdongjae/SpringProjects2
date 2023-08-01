@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("admin")
 public class AdminController {
-    private static final Logger logger = LoggerFactory.getLogger(
-            AdminController.class
-    );
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @GetMapping
     public String adminHome() {

@@ -6,5 +6,16 @@
 </head>
 <body>
     <h1>Hello World</h1>
+    <div sec:authorize="isAnonymous()">
+        <button onclick="location.href = '/user/login'">로그인</button>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <h2>
+        반갑습니다. <span sec:authentication="name"></span>님!
+        </h2>
+        <form th:action="@{/user/logout}" method="post">
+            <input type="submit" th:value="로그아웃">
+        </form>
+    </div>
 </body>
 </html>

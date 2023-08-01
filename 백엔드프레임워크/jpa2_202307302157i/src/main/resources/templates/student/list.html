@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/common.css">
+    <style>
+        a.btn {
+            float: right;
+            margin: -20px 0 5px 0;
+        }
+        td:nth-child(1), td:nth-child(5) {
+            text-align: center;
+        }
+    </style>
+    <title>학생목록</title>
+</head>
+<body>
+    <div class="container">
+        <h1>학생목록</h1>
+        <a href="create" class="btn">학생등록</a>
+        <table class="list">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>학번</th>
+                    <th>이름</th>
+                    <th>학과</th>
+                    <th>전화</th>
+                    <th>성별</th>
+                    <th>이메일</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student: ${students}" th:href="@{edit(id=${student.id})}" class="inherited-list">
+                <td th:text="${student.id}"></td>
+                <td th:text="${student.studentNo}"></td>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.department.name}"></td>
+                <td th:text="${student.phone}"></td>
+                <td th:text="${student.sex}"></td>
+                <td th:text="${student.email}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
