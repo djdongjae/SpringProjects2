@@ -1,7 +1,7 @@
 package hello.core.beanfind;
 
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRespository;
+import hello.core.member.MemoryMemberRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,12 +47,12 @@ public class ApplicationContextSameBeanFindTest {
 
         @Bean
         public MemberRepository memberRepository1() {
-            return new MemoryMemberRespository();
+            return new MemoryMemberRepository();
         }
 
         @Bean
         public MemberRepository memberRepository2() {
-            return new MemoryMemberRespository();
+            return new MemoryMemberRepository();
         }
     }
 
