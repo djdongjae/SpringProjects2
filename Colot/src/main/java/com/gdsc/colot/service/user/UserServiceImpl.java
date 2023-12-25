@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    // 이메일 중복 체크 기능
     private void checkDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email))
             throw new DuplicateUserException(ErrorCode.DUPLICATE_EMAIL_EXCEPTION, ErrorCode.DUPLICATE_EMAIL_EXCEPTION.getMessage());
