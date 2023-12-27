@@ -20,7 +20,7 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return ((String) parsingProfile().get("nickname")) + "@kakao.com";
+        return (String) parsingProfile().get("email");
     }
 
     private Map<String, Object> parsingProperties() {

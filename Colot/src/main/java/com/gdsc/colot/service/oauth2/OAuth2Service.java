@@ -5,6 +5,7 @@ import com.gdsc.colot.exception.model.OAuth2RequestFailedException;
 import com.gdsc.colot.oauth2.ClientRegistration;
 import com.gdsc.colot.oauth2.OAuth2Token;
 import com.gdsc.colot.oauth2.userInfo.OAuth2UserInfo;
+import com.gdsc.colot.oauth2.userInfo.OAuth2UserInfoFactory;
 import com.gdsc.colot.utils.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class OAuth2Service {
@@ -63,8 +65,11 @@ public abstract class OAuth2Service {
         try {
             entity = restTemplate.exchange(clientRegistration.getProviderDetails().getTokenUri(), HttpMethod.POST, httpEntity, String.class);
         } catch (HttpStatusCodeException exception) {
-            int statusCode = exception.getStatusCode().value();
-            throw new OAuth2RequestFailedException(ErrorCode.REQUEST_VALIDATION_EXCEPTION, String.format("%s 토큰 갱신 실패 [응답코드 : %d].", clientRegistration.getRegistrationId().toUpperCase(), statusCode));
+            ErrorCode errorCode = ErrorCode.builder()
+                    .httpStatus(exception.getStatusCode())
+                    .message(String.format("%s 토큰 요청 실패.", clientRegistration.getRegistrationId().toUpperCase()))
+                    .build();
+            throw new OAuth2RequestFailedException(errorCode, errorCode.getMessage());
         }
 
         log.debug(entity.getBody());
@@ -95,8 +100,11 @@ public abstract class OAuth2Service {
         try {
             entity = restTemplate.exchange(clientRegistration.getProviderDetails().getTokenUri(), HttpMethod.POST, httpEntity, String.class);
         } catch (HttpStatusCodeException exception) {
-            int statusCode = exception.getStatusCode().value();
-            throw new OAuth2RequestFailedException(ErrorCode.REQUEST_VALIDATION_EXCEPTION, String.format("%s 토큰 갱신 실패 [응답코드 : %d].", clientRegistration.getRegistrationId().toUpperCase(), statusCode));
+            ErrorCode errorCode = ErrorCode.builder()
+                    .httpStatus(exception.getStatusCode())
+                    .message(String.format("%s 토큰 갱신 실패.", clientRegistration.getRegistrationId().toUpperCase()))
+                    .build();
+            throw new OAuth2RequestFailedException(errorCode, errorCode.getMessage());
         }
 
         JsonObject jsonObj = JsonUtils.parse(entity.getBody()).getAsJsonObject();
@@ -115,7 +123,25 @@ public abstract class OAuth2Service {
 
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<String>
+        ResponseEntity<String> entity = null;
+        try {
+            entity = restTemplate.exchange(clientRegistration.getProviderDetails().getUserInfoUri(), HttpMethod.GET, httpEntity, String.class);
+        } catch (HttpStatusCodeException exception) {
+            ErrorCode errorCode = ErrorCode.builder()
+                    .httpStatus(exception.getStatusCode())
+                    .message(String.format("%s 유저 정보 요청 실패.", clientRegistration.getRegistrationId().toUpperCase()))
+                    .build();
+            throw new OAuth2RequestFailedException(errorCode, errorCode.getMessage());
+        }
+
+        log.debug(entity.getBody());
+        Map<String, Object> userAttributes = JsonUtils.fromJson(entity.getBody(), Map.class);
+
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(clientRegistration.getRegistrationId(), userAttributes);
+
+        return userInfo;
     }
+
+    public abstract void unlink(ClientRegistration clientRegistration, OAuth2Token token);
 
 }

@@ -1,12 +1,11 @@
 package com.gdsc.colot.exception;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorCode {
 
     /**
@@ -47,6 +46,12 @@ public enum ErrorCode {
 
     private final HttpStatus httpStatus;
     private final String message;
+
+    @Builder
+    ErrorCode(HttpStatus httpStatus, String message) {
+        this.httpStatus = httpStatus;
+        this.message = message;
+    }
 
     public int getHttpStatusCode() {
         return httpStatus.value();

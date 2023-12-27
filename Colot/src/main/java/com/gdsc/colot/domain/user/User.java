@@ -1,6 +1,7 @@
 package com.gdsc.colot.domain.user;
 
 import com.gdsc.colot.domain.BaseEntity;
+import com.gdsc.colot.domain.OAuth2Account;
 import com.gdsc.colot.security.AuthorityType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,6 +41,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private List<AuthorityType> authorities = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "SOCIAL_ID")
+    private OAuth2Account social;
+
     @Builder
     public User(String name, String email, String username, String password, UserType type) {
         this.name = name;
@@ -54,5 +59,25 @@ public class User extends BaseEntity {
         return this.authorities.stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.toString()))
                 .collect(Collectors.toList());
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
+        if (type.equals(UserType.DEFAULT))
+            this.username = email;
+    }
+
+    public void linkSocial(OAuth2Account oAuth2Account) {
+        this.social = oAuth2Account;
+        oAuth2Account.linkUser(this);
+    }
+
+    public void unlinkSocial() {
+        this.social.unlinkUser();
+        this.social = null;
     }
 }
