@@ -65,11 +65,7 @@ public abstract class OAuth2Service {
         try {
             entity = restTemplate.exchange(clientRegistration.getProviderDetails().getTokenUri(), HttpMethod.POST, httpEntity, String.class);
         } catch (HttpStatusCodeException exception) {
-            ErrorCode errorCode = ErrorCode.builder()
-                    .httpStatus(exception.getStatusCode())
-                    .message(String.format("%s 토큰 요청 실패.", clientRegistration.getRegistrationId().toUpperCase()))
-                    .build();
-            throw new OAuth2RequestFailedException(errorCode, errorCode.getMessage());
+            throw new OAuth2RequestFailedException(ErrorCode.OAUTH2_TOKEN_REQUEST_FAILED, ErrorCode.OAUTH2_TOKEN_REQUEST_FAILED.getMessage() + String.format("[%s]", clientRegistration.getRegistrationId().toUpperCase()));
         }
 
         log.debug(entity.getBody());
@@ -100,11 +96,7 @@ public abstract class OAuth2Service {
         try {
             entity = restTemplate.exchange(clientRegistration.getProviderDetails().getTokenUri(), HttpMethod.POST, httpEntity, String.class);
         } catch (HttpStatusCodeException exception) {
-            ErrorCode errorCode = ErrorCode.builder()
-                    .httpStatus(exception.getStatusCode())
-                    .message(String.format("%s 토큰 갱신 실패.", clientRegistration.getRegistrationId().toUpperCase()))
-                    .build();
-            throw new OAuth2RequestFailedException(errorCode, errorCode.getMessage());
+            throw new OAuth2RequestFailedException(ErrorCode.OAUTH2_REFRESH_TOKEN_FAILED, ErrorCode.OAUTH2_REFRESH_TOKEN_FAILED.getMessage() + String.format("[%s]", clientRegistration.getRegistrationId().toUpperCase()));
         }
 
         JsonObject jsonObj = JsonUtils.parse(entity.getBody()).getAsJsonObject();
@@ -127,11 +119,7 @@ public abstract class OAuth2Service {
         try {
             entity = restTemplate.exchange(clientRegistration.getProviderDetails().getUserInfoUri(), HttpMethod.GET, httpEntity, String.class);
         } catch (HttpStatusCodeException exception) {
-            ErrorCode errorCode = ErrorCode.builder()
-                    .httpStatus(exception.getStatusCode())
-                    .message(String.format("%s 유저 정보 요청 실패.", clientRegistration.getRegistrationId().toUpperCase()))
-                    .build();
-            throw new OAuth2RequestFailedException(errorCode, errorCode.getMessage());
+            throw new OAuth2RequestFailedException(ErrorCode.OAUTH2_USERINFO_REQUEST_FAILED, ErrorCode.OAUTH2_USERINFO_REQUEST_FAILED.getMessage() + String.format("[%s]", clientRegistration.getRegistrationId().toUpperCase()));
         }
 
         log.debug(entity.getBody());

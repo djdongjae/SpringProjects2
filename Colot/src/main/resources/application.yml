@@ -17,7 +17,7 @@ spring:
             client-id: 606741754155-r72t9udefqqf57de1qao5s7ra5frivnp.apps.googleusercontent.com
             client-secret: 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
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: http://localhost:8080/oauth2/callback/google
             scope:
               - profile
               - email
@@ -25,7 +25,7 @@ spring:
             client-id: 920bcbd436354309812e1b72d6edc194
             client-secret: drlU2D38HT9qAuSL7EEcS7KCQNZrzu0j
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://localhost:8080/oauth2/callback/kakao
             scope:
               - profile_nickname
         provider:
@@ -33,19 +33,19 @@ spring:
             authorization-uri: https://accounts.google.com/o/oauth2/auth
             token-uri: https://www.googleapis.com/oauth2/v4/token
             user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
-            unlink-uri: https://accounts.google.com/o/oauth2/revoke
+#            unlink-uri: https://accounts.google.com/o/oauth2/revoke
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
-            unlink-uri: https://kapi.kakao.com/v1/user/unlink
+#            unlink-uri: https://kapi.kakao.com/v1/user/unlink
 jwt:
   secretKey: b449732b1c844499e28d7d3926bb0a6a98f0c7f72d5b0fd7b35c7c5ceadf25a0
   signatureAlgorithm: HS256
   tokenExpired: 604800
-server:
-  servlet:
-    context-path: /api
+#server:
+#  servlet:
+#    context-path: /api
 # 로그 관련 설정
 logging:
   level:

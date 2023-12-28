@@ -1,11 +1,12 @@
 package com.gdsc.colot.exception;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorCode {
 
     /**
@@ -21,6 +22,10 @@ public enum ErrorCode {
     VALIDATION_IMAGE_REQUEST_FAILED(HttpStatus.BAD_REQUEST, "지원하지 않는 이미지 파일 형식입니다"),
     DUPLICATE_EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일입니다."),
     OAUTH2_NOT_SUPPORT_EXCEPTION(HttpStatus.BAD_REQUEST, "지원하지 않는 소셜 로그인입니다."),
+    OAUTH2_USERINFO_REQUEST_FAILED(HttpStatus.BAD_REQUEST, "소셜 유저 정보 요청 실패"),
+    OAUTH2_TOKEN_REQUEST_FAILED(HttpStatus.BAD_REQUEST, "소셜 토큰 요청 실패"),
+    OAUTH2_REFRESH_TOKEN_FAILED(HttpStatus.BAD_REQUEST, "소셜 토큰 갱신 실패"),
+    OAUTH2_REDIRECT_CALLBACK_EXCEPTION(HttpStatus.BAD_REQUEST, "리다이렉트 도중 오류 발생"),
 
     /**
      * 404 NOT FOUND
@@ -46,12 +51,6 @@ public enum ErrorCode {
 
     private final HttpStatus httpStatus;
     private final String message;
-
-    @Builder
-    ErrorCode(HttpStatus httpStatus, String message) {
-        this.httpStatus = httpStatus;
-        this.message = message;
-    }
 
     public int getHttpStatusCode() {
         return httpStatus.value();

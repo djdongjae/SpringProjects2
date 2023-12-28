@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
                 user = User.builder()
                         .username(provider + "_" + userInfo.getId())
                         .name(userInfo.getName())
+                        .email(userInfo.getName() + "@kakao.com")
                         .type(UserType.OAUTH)
                         .build();
             }
