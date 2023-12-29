@@ -68,6 +68,7 @@ public abstract class OAuth2Service {
             throw new OAuth2RequestFailedException(ErrorCode.OAUTH2_TOKEN_REQUEST_FAILED, ErrorCode.OAUTH2_TOKEN_REQUEST_FAILED.getMessage() + String.format("[%s]", clientRegistration.getRegistrationId().toUpperCase()));
         }
 
+        System.out.println(entity.getBody());
         log.debug(entity.getBody());
         JsonObject jsonObj = JsonUtils.parse(entity.getBody()).getAsJsonObject();
         String accessToken = jsonObj.get("access_token").getAsString();

@@ -42,7 +42,7 @@ spring:
 jwt:
   secretKey: b449732b1c844499e28d7d3926bb0a6a98f0c7f72d5b0fd7b35c7c5ceadf25a0
   signatureAlgorithm: HS256
-  tokenExpired: 604800
+  tokenExpired: 8640000
 #server:
 #  servlet:
 #    context-path: /api

@@ -6,15 +6,18 @@ import com.gdsc.colot.controller.dto.response.OAuth2AuthorizationResponseDto;
 import com.gdsc.colot.controller.dto.response.SignInResponseDto;
 import com.gdsc.colot.exception.ErrorCode;
 import com.gdsc.colot.exception.SuccessCode;
+import com.gdsc.colot.exception.model.NotFoundException;
 import com.gdsc.colot.exception.model.OAuth2RequestFailedException;
 import com.gdsc.colot.jwt.JwtProvider;
 import com.gdsc.colot.oauth2.ClientRegistration;
 import com.gdsc.colot.oauth2.ClientRegistrationRepository;
 import com.gdsc.colot.oauth2.OAuth2Token;
 import com.gdsc.colot.oauth2.userInfo.OAuth2UserInfo;
+import com.gdsc.colot.repository.UserRepository;
 import com.gdsc.colot.service.oauth2.OAuth2Service;
 import com.gdsc.colot.service.oauth2.OAuth2ServiceFactory;
 import com.gdsc.colot.service.user.UserService;
+import com.gdsc.colot.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,13 +42,20 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final JwtProvider jwtProvider;
+    private final UserRepository userRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/authorize")
     public BaseResponse<SignInResponseDto> authenticateUsernamePassword(@Valid @RequestBody AuthorizationRequestDto authorizationRequestDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authorizationRequestDto.getUsername(), authorizationRequestDto.getPassword()));
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final SignInResponseDto data = SignInResponseDto.of(jwtProvider.generateToken(userDetails.getUsername()));
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER_EXCEPTION, ErrorCode.NOT_FOUND_USER_EXCEPTION.getMessage()));
+        final SignInResponseDto data = SignInResponseDto.of(
+                user.getName(),
+                user.getType(),
+                jwtProvider.generateToken(userDetails.getUsername())
+        );
         return BaseResponse.success(SuccessCode.LOGIN_SUCCESS, data);
     }
 
@@ -74,7 +84,13 @@ public class AuthenticationController {
         OAuth2UserInfo oAuth2UserInfo = oAuth2Service.getUserInfo(clientRegistration, oAuth2Token.getToken());
 
         UserDetails userDetails = userService.loginOAuth2User(provider, oAuth2Token, oAuth2UserInfo);
-        final SignInResponseDto data = SignInResponseDto.of(jwtProvider.generateToken(userDetails.getUsername()));
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER_EXCEPTION, ErrorCode.NOT_FOUND_USER_EXCEPTION.getMessage()));
+        final SignInResponseDto data = SignInResponseDto.of(
+                user.getName(),
+                user.getType(),
+                jwtProvider.generateToken(userDetails.getUsername())
+        );
         return BaseResponse.success(SuccessCode.LOGIN_SUCCESS, data);
     }
 
