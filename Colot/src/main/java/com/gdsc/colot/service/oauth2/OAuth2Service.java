@@ -68,14 +68,13 @@ public abstract class OAuth2Service {
             throw new OAuth2RequestFailedException(ErrorCode.OAUTH2_TOKEN_REQUEST_FAILED, ErrorCode.OAUTH2_TOKEN_REQUEST_FAILED.getMessage() + String.format("[%s]", clientRegistration.getRegistrationId().toUpperCase()));
         }
 
-        System.out.println(entity.getBody());
         log.debug(entity.getBody());
         JsonObject jsonObj = JsonUtils.parse(entity.getBody()).getAsJsonObject();
         String accessToken = jsonObj.get("access_token").getAsString();
-        String refreshToken = jsonObj.get("refresh_token").getAsString();
+        Optional<JsonElement> optionalRefreshToken = Optional.ofNullable(jsonObj.get("refresh_token"));
         LocalDateTime expiredAt = LocalDateTime.now().plusSeconds(jsonObj.get("expires_in").getAsLong());
 
-        return new OAuth2Token(accessToken, refreshToken, expiredAt);
+        return new OAuth2Token(accessToken, optionalRefreshToken.map(JsonElement::getAsString).orElse(null), expiredAt);
     }
 
     protected OAuth2Token refreshOAuth2Token(ClientRegistration clientRegistration, OAuth2Token token) {
@@ -99,7 +98,6 @@ public abstract class OAuth2Service {
         } catch (HttpStatusCodeException exception) {
             throw new OAuth2RequestFailedException(ErrorCode.OAUTH2_REFRESH_TOKEN_FAILED, ErrorCode.OAUTH2_REFRESH_TOKEN_FAILED.getMessage() + String.format("[%s]", clientRegistration.getRegistrationId().toUpperCase()));
         }
-
         JsonObject jsonObj = JsonUtils.parse(entity.getBody()).getAsJsonObject();
         String accessToken = jsonObj.get("access_token").getAsString();
         Optional<JsonElement> optionalNewRefreshToken = Optional.ofNullable(jsonObj.get("refresh_token"));

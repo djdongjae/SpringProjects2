@@ -50,11 +50,15 @@ public class UserServiceImpl implements UserService {
         if (optOAuth2Account.isPresent()) {
             OAuth2Account oAuth2Account = optOAuth2Account.get();
             user = oAuth2Account.getUser();
-            oAuth2Account.updateToken(oAuth2Token.getToken(), oAuth2Token.getRefreshToken(), oAuth2Token.getExpiredAt());
+            if (oAuth2Token.getRefreshToken() == null) {
+                oAuth2Account.updateToken(oAuth2Token.getToken(), oAuth2Account.getRefreshToken(), oAuth2Token.getExpiredAt());
+            } else {
+                oAuth2Account.updateToken(oAuth2Token.getToken(), oAuth2Token.getRefreshToken(), oAuth2Token.getExpiredAt());
+            }
         } else {
             OAuth2Account newAccount = OAuth2Account.builder()
                     .provider(provider)
-                    .provider(userInfo.getId())
+                    .providerId(userInfo.getId())
                     .token(oAuth2Token.getToken())
                     .refreshToken(oAuth2Token.getRefreshToken())
                     .tokenExpiredAt(oAuth2Token.getExpiredAt()).build();
